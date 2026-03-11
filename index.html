@@ -40,18 +40,26 @@
   .app { position: relative; z-index: 1; max-width: 740px; margin: 0 auto; padding: 24px 16px 80px; }
 
   .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    margin-bottom: 24px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: flex-end;
+    margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--border);
   }
   .program-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
   .program-title { font-family: 'Bebas Neue', sans-serif; font-size: 38px; line-height: 1; letter-spacing: 1px; }
   .program-sub { font-size: 12px; color: var(--muted); margin-top: 4px; }
   .date-display { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); text-align: right; }
   .date-display span { display: block; font-size: 20px; color: var(--text); font-family: 'Bebas Neue', sans-serif; letter-spacing: 1px; }
+
+  .sync-bar {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--surface); border-radius: 8px; padding: 8px 14px;
+    margin-bottom: 16px; font-family: 'DM Mono', monospace; font-size: 11px;
+  }
+  .sync-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--dim); flex-shrink: 0; transition: background 0.3s; }
+  .sync-dot.synced { background: #2ab87a; }
+  .sync-dot.syncing { background: #e8a020; animation: pulse 1s infinite; }
+  .sync-dot.error { background: #e02a2a; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  .sync-text { color: var(--muted); }
 
   .view-tabs { display: flex; gap: 6px; margin-bottom: 20px; }
   .view-tab {
@@ -68,7 +76,6 @@
     font-size: 12px; cursor: pointer; transition: all 0.15s; letter-spacing: 1px;
   }
   .day-btn:hover { border-color: var(--dim); color: var(--text); }
-  .day-btn.active { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 15%, transparent); color: var(--accent); }
 
   .day-header {
     background: var(--surface); border-radius: 10px; padding: 16px 20px;
@@ -79,32 +86,16 @@
   .day-focus { font-size: 11px; color: var(--accent); margin-top: 2px; font-family: 'DM Mono', monospace; letter-spacing: 1px; }
   .ex-count { background: color-mix(in srgb, var(--accent) 20%, transparent); color: var(--accent); border-radius: 6px; padding: 4px 10px; font-size: 11px; font-family: 'DM Mono', monospace; }
 
-  /* Muscle group section */
   .muscle-section { margin-bottom: 20px; }
-  .muscle-label {
-    display: flex; align-items: center; gap: 10px;
-    margin-bottom: 8px;
-  }
-  .muscle-name {
-    font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 2px;
-    color: var(--muted);
-  }
-  .muscle-badge {
-    font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 1px;
-    color: var(--dim); background: var(--surface2); padding: 2px 7px; border-radius: 4px;
-  }
+  .muscle-label { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .muscle-name { font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 2px; color: var(--muted); }
+  .muscle-badge { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 1px; color: var(--dim); background: var(--surface2); padding: 2px 7px; border-radius: 4px; }
   .muscle-divider { flex: 1; height: 1px; background: var(--border); }
 
-  .finisher-label {
-    display: flex; align-items: center; gap: 10px; margin: 24px 0 8px;
-  }
-  .finisher-name {
-    font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 2px;
-    color: #9b2ae0;
-  }
+  .finisher-label { display: flex; align-items: center; gap: 10px; margin: 24px 0 8px; }
+  .finisher-name { font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 2px; color: #9b2ae0; }
   .finisher-divider { flex: 1; height: 1px; background: #9b2ae022; }
 
-  /* Exercise card */
   .exercise-card {
     background: var(--surface); border-radius: 10px; margin-bottom: 10px;
     overflow: hidden; border-left: 3px solid color-mix(in srgb, var(--accent) 35%, transparent);
@@ -159,13 +150,13 @@
   .history-toggle:hover { color: var(--text); }
   .history-panel { background: var(--bg); border-top: 1px solid var(--border); padding: 10px 18px; display: none; }
   .history-panel.open { display: block; }
-  .history-entry { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid var(--border); font-size: 11px; }
+  .history-entry { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid var(--border); }
   .history-entry:last-child { border-bottom: none; }
   .h-date { font-family: 'DM Mono', monospace; color: var(--muted); font-size: 10px; }
   .h-sets { font-family: 'DM Mono', monospace; color: var(--text); font-size: 10px; margin-top: 2px; }
   .no-history { color: var(--dim); font-size: 11px; font-style: italic; }
 
-  .rest-day { background: var(--surface); border-radius: 10px; padding: 50px 20px; text-align: center; color: var(--dim); }
+  .rest-day { background: var(--surface); border-radius: 10px; padding: 50px 20px; text-align: center; }
   .rest-icon { font-size: 40px; margin-bottom: 14px; }
   .rest-text { font-size: 15px; color: var(--muted); }
   .rest-sub { font-size: 12px; color: var(--dim); margin-top: 8px; }
@@ -184,6 +175,7 @@
     letter-spacing: 1px; cursor: pointer; transition: opacity 0.15s;
   }
   .save-btn:hover { opacity: 0.85; }
+  .save-btn:disabled { opacity: 0.4; cursor: not-allowed; }
   .clear-btn {
     padding: 10px 16px; border-radius: 8px; border: 1px solid var(--border);
     background: transparent; color: var(--muted); font-family: 'DM Mono', monospace;
@@ -191,16 +183,9 @@
   }
   .clear-btn:hover { border-color: #e05c2a; color: #e05c2a; }
 
-  /* Progress */
   .progress-section { margin-bottom: 28px; }
-  .progress-section-title {
-    font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 2px;
-    color: var(--muted); margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px solid var(--border);
-  }
-  .progress-row {
-    display: grid; grid-template-columns: 1fr auto; gap: 12px;
-    align-items: start; padding: 10px 0; border-bottom: 1px solid var(--border);
-  }
+  .progress-section-title { font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 2px; color: var(--muted); margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+  .progress-row { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: start; padding: 10px 0; border-bottom: 1px solid var(--border); }
   .progress-row:last-child { border-bottom: none; }
   .p-exname { font-size: 13px; font-weight: 600; margin-bottom: 3px; }
   .p-sessions { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); }
@@ -229,6 +214,11 @@
     </div>
   </div>
 
+  <div class="sync-bar">
+    <div class="sync-dot" id="syncDot"></div>
+    <div class="sync-text" id="syncText">Connecting...</div>
+  </div>
+
   <div class="view-tabs">
     <button class="view-tab active" onclick="showView('log')">LOG WORKOUT</button>
     <button class="view-tab" onclick="showView('progress')">PROGRESS</button>
@@ -246,273 +236,229 @@
 </div>
 
 <div class="save-bar">
-  <div style="display:flex;align-items:center;gap:8px">
-    <div>
-      <div class="save-status" id="saveStatus">No unsaved changes</div>
-    </div>
+  <div>
+    <div class="save-status" id="saveStatus">No unsaved changes</div>
   </div>
   <div>
     <button class="clear-btn" onclick="clearToday()">Clear Today</button>
-    <button class="save-btn" onclick="saveWorkout()">SAVE WORKOUT</button>
+    <button class="save-btn" id="saveBtn" onclick="saveWorkout()">SAVE WORKOUT</button>
   </div>
 </div>
 
 <script>
+// ── Supabase config ──────────────────────────────────────────────
+const SUPABASE_URL = 'https://flngagveydruhcisgdrs.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbmdhZ3ZleWRydWhjaXNnZHJzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyNjczMzQsImV4cCI6MjA4ODg0MzMzNH0.QVw6Y0vcP03t4MgW9LR0WiOuLKvonwu_Mwf2uOfzxvk';
+
+const headers = {
+  'Content-Type': 'application/json',
+  'apikey': SUPABASE_KEY,
+  'Authorization': `Bearer ${SUPABASE_KEY}`,
+  'Prefer': 'return=representation'
+};
+
+async function dbUpsert(exerciseId, logDate, sets) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/workout_logs`, {
+    method: 'POST',
+    headers: { ...headers, 'Prefer': 'resolution=merge-duplicates,return=representation' },
+    body: JSON.stringify({ exercise_id: exerciseId, log_date: logDate, sets, updated_at: new Date().toISOString() })
+  });
+  if (!res.ok) throw new Error(await res.text());
+}
+
+async function dbFetchHistory(exerciseId) {
+  const res = await fetch(
+    `${SUPABASE_URL}/rest/v1/workout_logs?exercise_id=eq.${exerciseId}&order=log_date.desc&limit=10`,
+    { headers }
+  );
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+async function dbFetchAll() {
+  const res = await fetch(
+    `${SUPABASE_URL}/rest/v1/workout_logs?order=log_date.desc`,
+    { headers }
+  );
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+async function dbDeleteDay(exerciseIds, logDate) {
+  for (const id of exerciseIds) {
+    await fetch(
+      `${SUPABASE_URL}/rest/v1/workout_logs?exercise_id=eq.${id}&log_date=eq.${logDate}`,
+      { method: 'DELETE', headers }
+    );
+  }
+}
+
+// ── Sync status UI ───────────────────────────────────────────────
+function setSyncStatus(state, msg) {
+  const dot = document.getElementById('syncDot');
+  const txt = document.getElementById('syncText');
+  dot.className = 'sync-dot ' + state;
+  txt.textContent = msg;
+}
+
+// ── Schedule data ────────────────────────────────────────────────
 const DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
 
-// Full schedule - 5 days full upper body, 2 exercises x 2 sets to failure per muscle group
-// Finishers rotate through the week
 const SCHEDULE = {
   Mon: {
     label: 'Monday', focus: 'FULL UPPER BODY',
     groups: [
-      {
-        name: 'CHEST', finisher: false,
-        exercises: [
-          { id: 'dips_mon', name: 'Dips', target: '2 × Failure', notes: 'Full depth, controlled descent' },
-          { id: 'db_chest_press_mon', name: 'Single DB Chest Press', target: '2 × Failure', notes: 'Both hands on one DB, couch' },
-        ]
-      },
-      {
-        name: 'BACK', finisher: false,
-        exercises: [
-          { id: 'pullups_mon', name: 'Pull-ups', target: '2 × Failure', notes: 'Full dead hang start' },
-          { id: 'inv_rows_mon', name: 'Inverted Rows', target: '2 × Failure', notes: 'Squeeze shoulder blades at top' },
-        ]
-      },
-      {
-        name: 'BICEPS', finisher: false,
-        exercises: [
-          { id: 'hammer_mon', name: 'Hammer Curls', target: '2 × Failure', notes: 'Neutral grip, no swinging' },
-          { id: 'db_curls_mon', name: 'Regular DB Curls', target: '2 × Failure', notes: 'Slow 2-second negative' },
-        ]
-      },
-      {
-        name: 'TRICEPS', finisher: false,
-        exercises: [
-          { id: 'tri_ext_mon', name: 'Tricep Extension', target: '2 × Failure', notes: 'Both arms, elbow stays in' },
-          { id: 'single_tri_mon', name: 'Single Arm Tricep Extension', target: '2 × Failure', notes: 'Each arm, elbow tucked' },
-        ]
-      },
-      {
-        name: 'FINISHER — CORE', finisher: true,
-        exercises: [
-          { id: 'tower_leg_mon', name: 'Power Tower Leg Raises', target: '3 × 15', notes: 'Controlled, no swinging' },
-          { id: 'couch_leg_mon', name: 'Couch Leg Raises', target: '2 × 20', notes: 'Slow and deliberate' },
-        ]
-      },
+      { name: 'CHEST', finisher: false, exercises: [
+        { id: 'dips_mon', name: 'Dips', target: '2 × Failure', notes: 'Full depth, controlled descent' },
+        { id: 'db_chest_press_mon', name: 'Single DB Chest Press', target: '2 × Failure', notes: 'Both hands on one DB, couch' },
+      ]},
+      { name: 'BACK', finisher: false, exercises: [
+        { id: 'pullups_mon', name: 'Pull-ups', target: '2 × Failure', notes: 'Full dead hang start' },
+        { id: 'inv_rows_mon', name: 'Inverted Rows', target: '2 × Failure', notes: 'Squeeze shoulder blades at top' },
+      ]},
+      { name: 'BICEPS', finisher: false, exercises: [
+        { id: 'hammer_mon', name: 'Hammer Curls', target: '2 × Failure', notes: 'Neutral grip, no swinging' },
+        { id: 'db_curls_mon', name: 'Regular DB Curls', target: '2 × Failure', notes: 'Slow 2-second negative' },
+      ]},
+      { name: 'TRICEPS', finisher: false, exercises: [
+        { id: 'tri_ext_mon', name: 'Tricep Extension', target: '2 × Failure', notes: 'Both arms, elbow stays in' },
+        { id: 'single_tri_mon', name: 'Single Arm Tricep Extension', target: '2 × Failure', notes: 'Each arm, elbow tucked' },
+      ]},
+      { name: 'FINISHER — CORE', finisher: true, exercises: [
+        { id: 'tower_leg_mon', name: 'Power Tower Leg Raises', target: '3 × 15', notes: 'Controlled, no swinging' },
+        { id: 'couch_leg_mon', name: 'Couch Leg Raises', target: '2 × 20', notes: 'Slow and deliberate' },
+      ]},
     ]
   },
   Tue: {
     label: 'Tuesday', focus: 'FULL UPPER BODY',
     groups: [
-      {
-        name: 'CHEST', finisher: false,
-        exercises: [
-          { id: 'db_flyes_tue', name: 'Couch DB Flyes', target: '2 × Failure', notes: 'Wide arc, feel the stretch' },
-          { id: 'across_body_tue', name: 'Across Body DB Raises', target: '2 × Failure', notes: 'Control the cross motion' },
-        ]
-      },
-      {
-        name: 'BACK', finisher: false,
-        exercises: [
-          { id: 'pullups_tue', name: 'Pull-ups', target: '2 × Failure', notes: 'Beat Monday\'s reps' },
-          { id: 'inv_rows_tue', name: 'Inverted Rows', target: '2 × Failure', notes: 'Add pause at top' },
-        ]
-      },
-      {
-        name: 'BICEPS', finisher: false,
-        exercises: [
-          { id: 'twist_curl_tue', name: 'Twisting Curls', target: '2 × Failure', notes: 'Full supination at top' },
-          { id: 'rev_curl_tue', name: 'Reverse Curls', target: '2 × Failure', notes: 'Overhand grip, slow negative' },
-        ]
-      },
-      {
-        name: 'TRICEPS', finisher: false,
-        exercises: [
-          { id: 'dips_tue', name: 'Dips', target: '2 × Failure', notes: 'Go deeper than Monday' },
-          { id: 'tri_ext_tue', name: 'Tricep Extension', target: '2 × Failure', notes: 'Heavier than Monday if able' },
-        ]
-      },
-      {
-        name: 'FINISHER — SHOULDERS', finisher: true,
-        exercises: [
-          { id: 'shoulder_press_tue', name: 'Shoulder Press', target: '3 × 12', notes: 'Seated, controlled' },
-          { id: 'lat_raises_tue', name: 'Lateral Raises', target: '3 × 15', notes: 'Slight bend in elbow' },
-        ]
-      },
+      { name: 'CHEST', finisher: false, exercises: [
+        { id: 'db_flyes_tue', name: 'Couch DB Flyes', target: '2 × Failure', notes: 'Wide arc, feel the stretch' },
+        { id: 'across_body_tue', name: 'Across Body DB Raises', target: '2 × Failure', notes: 'Control the cross motion' },
+      ]},
+      { name: 'BACK', finisher: false, exercises: [
+        { id: 'pullups_tue', name: 'Pull-ups', target: '2 × Failure', notes: "Beat Monday's reps" },
+        { id: 'inv_rows_tue', name: 'Inverted Rows', target: '2 × Failure', notes: 'Add pause at top' },
+      ]},
+      { name: 'BICEPS', finisher: false, exercises: [
+        { id: 'twist_curl_tue', name: 'Twisting Curls', target: '2 × Failure', notes: 'Full supination at top' },
+        { id: 'rev_curl_tue', name: 'Reverse Curls', target: '2 × Failure', notes: 'Overhand grip, slow negative' },
+      ]},
+      { name: 'TRICEPS', finisher: false, exercises: [
+        { id: 'dips_tue', name: 'Dips', target: '2 × Failure', notes: 'Go deeper than Monday' },
+        { id: 'tri_ext_tue', name: 'Tricep Extension', target: '2 × Failure', notes: 'Heavier than Monday if able' },
+      ]},
+      { name: 'FINISHER — SHOULDERS', finisher: true, exercises: [
+        { id: 'shoulder_press_tue', name: 'Shoulder Press', target: '3 × 12', notes: 'Seated, controlled' },
+        { id: 'lat_raises_tue', name: 'Lateral Raises', target: '3 × 15', notes: 'Slight bend in elbow' },
+      ]},
     ]
   },
   Wed: {
     label: 'Wednesday', focus: 'FULL UPPER BODY',
     groups: [
-      {
-        name: 'CHEST', finisher: false,
-        exercises: [
-          { id: 'dips_wed', name: 'Dips', target: '2 × Failure', notes: 'Focus on chest lean forward' },
-          { id: 'db_flyes_wed', name: 'Couch DB Flyes', target: '2 × Failure', notes: 'Heavier than Tuesday' },
-        ]
-      },
-      {
-        name: 'BACK', finisher: false,
-        exercises: [
-          { id: 'pullups_wed', name: 'Pull-ups', target: '2 × Failure', notes: 'Wide grip if possible' },
-          { id: 'inv_rows_wed', name: 'Inverted Rows', target: '2 × Failure', notes: 'Slow 3-second negative' },
-        ]
-      },
-      {
-        name: 'BICEPS', finisher: false,
-        exercises: [
-          { id: 'hammer_wed', name: 'Hammer Curls', target: '2 × Failure', notes: 'Heavier than Monday' },
-          { id: 'twist_curl_wed', name: 'Twisting Curls', target: '2 × Failure', notes: 'Full range of motion' },
-        ]
-      },
-      {
-        name: 'TRICEPS', finisher: false,
-        exercises: [
-          { id: 'single_tri_wed', name: 'Single Arm Tricep Extension', target: '2 × Failure', notes: 'Heavier than Monday' },
-          { id: 'tri_ext_wed', name: 'Tricep Extension', target: '2 × Failure', notes: 'Slow negative' },
-        ]
-      },
-      {
-        name: 'FINISHER — FOREARMS', finisher: true,
-        exercises: [
-          { id: 'forearm_curls_wed', name: 'Forearm Curls', target: '3 × 20', notes: 'Full range, wrist only' },
-          { id: 'rev_curl_wed_fin', name: 'Reverse Curls', target: '2 × 15', notes: 'Burnout, lighter weight' },
-        ]
-      },
+      { name: 'CHEST', finisher: false, exercises: [
+        { id: 'dips_wed', name: 'Dips', target: '2 × Failure', notes: 'Focus on chest lean forward' },
+        { id: 'db_flyes_wed', name: 'Couch DB Flyes', target: '2 × Failure', notes: 'Heavier than Tuesday' },
+      ]},
+      { name: 'BACK', finisher: false, exercises: [
+        { id: 'pullups_wed', name: 'Pull-ups', target: '2 × Failure', notes: 'Wide grip if possible' },
+        { id: 'inv_rows_wed', name: 'Inverted Rows', target: '2 × Failure', notes: 'Slow 3-second negative' },
+      ]},
+      { name: 'BICEPS', finisher: false, exercises: [
+        { id: 'hammer_wed', name: 'Hammer Curls', target: '2 × Failure', notes: 'Heavier than Monday' },
+        { id: 'twist_curl_wed', name: 'Twisting Curls', target: '2 × Failure', notes: 'Full range of motion' },
+      ]},
+      { name: 'TRICEPS', finisher: false, exercises: [
+        { id: 'single_tri_wed', name: 'Single Arm Tricep Extension', target: '2 × Failure', notes: 'Heavier than Monday' },
+        { id: 'tri_ext_wed', name: 'Tricep Extension', target: '2 × Failure', notes: 'Slow negative' },
+      ]},
+      { name: 'FINISHER — FOREARMS', finisher: true, exercises: [
+        { id: 'forearm_curls_wed', name: 'Forearm Curls', target: '3 × 20', notes: 'Full range, wrist only' },
+        { id: 'rev_curl_wed_fin', name: 'Reverse Curls', target: '2 × 15', notes: 'Burnout, lighter weight' },
+      ]},
     ]
   },
   Thu: {
     label: 'Thursday', focus: 'FULL UPPER BODY',
     groups: [
-      {
-        name: 'CHEST', finisher: false,
-        exercises: [
-          { id: 'db_chest_press_thu', name: 'Single DB Chest Press', target: '2 × Failure', notes: 'Beat Monday weight' },
-          { id: 'across_body_thu', name: 'Across Body DB Raises', target: '2 × Failure', notes: 'Beat Tuesday reps' },
-        ]
-      },
-      {
-        name: 'BACK', finisher: false,
-        exercises: [
-          { id: 'pullups_thu', name: 'Pull-ups', target: '2 × Failure', notes: 'Beat Wednesday reps' },
-          { id: 'inv_rows_thu', name: 'Inverted Rows', target: '2 × Failure', notes: 'Heavier or more reps' },
-        ]
-      },
-      {
-        name: 'BICEPS', finisher: false,
-        exercises: [
-          { id: 'db_curls_thu', name: 'Regular DB Curls', target: '2 × Failure', notes: 'Beat Monday weight' },
-          { id: 'rev_curl_thu', name: 'Reverse Curls', target: '2 × Failure', notes: 'Beat Tuesday reps' },
-        ]
-      },
-      {
-        name: 'TRICEPS', finisher: false,
-        exercises: [
-          { id: 'dips_thu', name: 'Dips', target: '2 × Failure', notes: 'Beat Tuesday reps' },
-          { id: 'single_tri_thu', name: 'Single Arm Tricep Extension', target: '2 × Failure', notes: 'Beat Wednesday' },
-        ]
-      },
-      {
-        name: 'FINISHER — CORE', finisher: true,
-        exercises: [
-          { id: 'tower_leg_thu', name: 'Power Tower Leg Raises', target: '3 × 15', notes: 'Beat Monday reps' },
-          { id: 'couch_leg_thu', name: 'Couch Leg Raises', target: '2 × 20', notes: 'Add weight if easy' },
-        ]
-      },
+      { name: 'CHEST', finisher: false, exercises: [
+        { id: 'db_chest_press_thu', name: 'Single DB Chest Press', target: '2 × Failure', notes: 'Beat Monday weight' },
+        { id: 'across_body_thu', name: 'Across Body DB Raises', target: '2 × Failure', notes: 'Beat Tuesday reps' },
+      ]},
+      { name: 'BACK', finisher: false, exercises: [
+        { id: 'pullups_thu', name: 'Pull-ups', target: '2 × Failure', notes: 'Beat Wednesday reps' },
+        { id: 'inv_rows_thu', name: 'Inverted Rows', target: '2 × Failure', notes: 'Heavier or more reps' },
+      ]},
+      { name: 'BICEPS', finisher: false, exercises: [
+        { id: 'db_curls_thu', name: 'Regular DB Curls', target: '2 × Failure', notes: 'Beat Monday weight' },
+        { id: 'rev_curl_thu', name: 'Reverse Curls', target: '2 × Failure', notes: 'Beat Tuesday reps' },
+      ]},
+      { name: 'TRICEPS', finisher: false, exercises: [
+        { id: 'dips_thu', name: 'Dips', target: '2 × Failure', notes: 'Beat Tuesday reps' },
+        { id: 'single_tri_thu', name: 'Single Arm Tricep Extension', target: '2 × Failure', notes: 'Beat Wednesday' },
+      ]},
+      { name: 'FINISHER — CORE', finisher: true, exercises: [
+        { id: 'tower_leg_thu', name: 'Power Tower Leg Raises', target: '3 × 15', notes: 'Beat Monday reps' },
+        { id: 'couch_leg_thu', name: 'Couch Leg Raises', target: '2 × 20', notes: 'Add weight if easy' },
+      ]},
     ]
   },
   Fri: {
     label: 'Friday', focus: 'FULL UPPER BODY — WEEK FINISHER',
     groups: [
-      {
-        name: 'CHEST', finisher: false,
-        exercises: [
-          { id: 'dips_fri', name: 'Dips', target: '2 × Failure', notes: 'Heaviest week — beat Thursday' },
-          { id: 'db_flyes_fri', name: 'Couch DB Flyes', target: '2 × Failure', notes: 'Full stretch, slow negative' },
-        ]
-      },
-      {
-        name: 'BACK', finisher: false,
-        exercises: [
-          { id: 'pullups_fri', name: 'Pull-ups', target: '2 × Failure', notes: 'Max effort — week best' },
-          { id: 'inv_rows_fri', name: 'Inverted Rows', target: '2 × Failure', notes: 'Beat Thursday' },
-        ]
-      },
-      {
-        name: 'BICEPS', finisher: false,
-        exercises: [
-          { id: 'hammer_fri', name: 'Hammer Curls', target: '2 × Failure', notes: 'Beat Wednesday weight' },
-          { id: 'twist_curl_fri', name: 'Twisting Curls', target: '2 × Failure', notes: 'Full supination, max reps' },
-        ]
-      },
-      {
-        name: 'TRICEPS', finisher: false,
-        exercises: [
-          { id: 'tri_ext_fri', name: 'Tricep Extension', target: '2 × Failure', notes: 'Beat Wednesday weight' },
-          { id: 'single_tri_fri', name: 'Single Arm Tricep Extension', target: '2 × Failure', notes: 'Max reps each arm' },
-        ]
-      },
-      {
-        name: 'FINISHER — SHOULDERS', finisher: true,
-        exercises: [
-          { id: 'shoulder_press_fri', name: 'Shoulder Press', target: '3 × Failure', notes: 'Beat Tuesday weight' },
-          { id: 'lat_raises_fri', name: 'Lateral Raises', target: '3 × 20', notes: 'Pump finisher' },
-        ]
-      },
+      { name: 'CHEST', finisher: false, exercises: [
+        { id: 'dips_fri', name: 'Dips', target: '2 × Failure', notes: 'Heaviest week — beat Thursday' },
+        { id: 'db_flyes_fri', name: 'Couch DB Flyes', target: '2 × Failure', notes: 'Full stretch, slow negative' },
+      ]},
+      { name: 'BACK', finisher: false, exercises: [
+        { id: 'pullups_fri', name: 'Pull-ups', target: '2 × Failure', notes: 'Max effort — week best' },
+        { id: 'inv_rows_fri', name: 'Inverted Rows', target: '2 × Failure', notes: 'Beat Thursday' },
+      ]},
+      { name: 'BICEPS', finisher: false, exercises: [
+        { id: 'hammer_fri', name: 'Hammer Curls', target: '2 × Failure', notes: 'Beat Wednesday weight' },
+        { id: 'twist_curl_fri', name: 'Twisting Curls', target: '2 × Failure', notes: 'Full supination, max reps' },
+      ]},
+      { name: 'TRICEPS', finisher: false, exercises: [
+        { id: 'tri_ext_fri', name: 'Tricep Extension', target: '2 × Failure', notes: 'Beat Wednesday weight' },
+        { id: 'single_tri_fri', name: 'Single Arm Tricep Extension', target: '2 × Failure', notes: 'Max reps each arm' },
+      ]},
+      { name: 'FINISHER — SHOULDERS', finisher: true, exercises: [
+        { id: 'shoulder_press_fri', name: 'Shoulder Press', target: '3 × Failure', notes: 'Beat Tuesday weight' },
+        { id: 'lat_raises_fri', name: 'Lateral Raises', target: '3 × 20', notes: 'Pump finisher' },
+      ]},
     ]
   },
   Sat: { label: 'Saturday', focus: 'REST', groups: [] },
   Sun: { label: 'Sunday', focus: 'REST', groups: [] },
 };
 
-// All exercise IDs for progress tracking
-function getAllExIds() {
-  const ids = new Set();
-  Object.values(SCHEDULE).forEach(day => {
-    (day.groups || []).forEach(g => g.exercises.forEach(ex => ids.add(ex.id)));
-  });
-  return ids;
-}
-
+// ── App state ────────────────────────────────────────────────────
 let activeDay = (() => {
-  const jsDay = new Date().getDay(); // 0=Sun
   const map = [6,0,1,2,3,4,5];
-  return DAYS[map[jsDay]];
+  return DAYS[map[new Date().getDay()]];
 })();
 
 let currentView = 'log';
 let sessionData = {};
 let unsaved = false;
+let cloudHistory = {}; // cached: { exId: [{log_date, sets}] }
 
 function getTodayKey() {
   const d = new Date();
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 }
 
-function getHistoryKey(exId) { return `hist_v2_${exId}`; }
-
-function loadHistory(exId) {
-  try { return JSON.parse(localStorage.getItem(getHistoryKey(exId)) || '[]'); }
-  catch { return []; }
-}
-
-function saveHistory(exId, entries) {
-  localStorage.setItem(getHistoryKey(exId), JSON.stringify(entries));
-}
-
 function initSession() {
   sessionData = {};
   const day = SCHEDULE[activeDay];
-  let idx = 0;
   (day.groups || []).forEach(g => {
     g.exercises.forEach(ex => {
       sessionData[ex.id] = {
         sets: [{ reps: '', weight: '', done: false }, { reps: '', weight: '', done: false }],
         historyOpen: false
       };
-      idx++;
     });
   });
 }
@@ -524,38 +470,98 @@ function markUnsaved() {
   el.style.color = '#e05c2a';
 }
 
-function saveWorkout() {
+// ── Load today's existing data from cloud ────────────────────────
+async function loadTodayFromCloud() {
+  setSyncStatus('syncing', 'Loading today\'s workout...');
+  try {
+    const today = getTodayKey();
+    const day = SCHEDULE[activeDay];
+    const exIds = (day.groups || []).flatMap(g => g.exercises.map(e => e.id));
+
+    for (const exId of exIds) {
+      const rows = await dbFetchHistory(exId);
+      cloudHistory[exId] = rows;
+      const todayRow = rows.find(r => r.log_date === today);
+      if (todayRow && sessionData[exId]) {
+        sessionData[exId].sets = todayRow.sets;
+      }
+    }
+    setSyncStatus('synced', 'Synced with cloud');
+  } catch (e) {
+    setSyncStatus('error', 'Offline — data saves locally');
+    console.error(e);
+  }
+}
+
+// ── Save to cloud ────────────────────────────────────────────────
+async function saveWorkout() {
+  const btn = document.getElementById('saveBtn');
+  btn.disabled = true;
+  btn.textContent = 'SAVING...';
+  setSyncStatus('syncing', 'Saving...');
+
   const day = SCHEDULE[activeDay];
   const dateKey = getTodayKey();
-  (day.groups || []).forEach(g => {
-    g.exercises.forEach(ex => {
-      const sd = sessionData[ex.id];
-      if (!sd) return;
-      const sets = sd.sets.filter(s => s.reps || s.weight);
-      if (sets.length === 0) return;
-      const history = loadHistory(ex.id);
-      const existing = history.findIndex(h => h.date === dateKey);
-      const entry = { date: dateKey, sets };
-      if (existing >= 0) history[existing] = entry;
-      else history.unshift(entry);
-      if (history.length > 30) history.splice(30);
-      saveHistory(ex.id, history);
-    });
-  });
+  let saved = 0;
+
+  try {
+    for (const group of (day.groups || [])) {
+      for (const ex of group.exercises) {
+        const sd = sessionData[ex.id];
+        if (!sd) continue;
+        const sets = sd.sets.filter(s => s.reps || s.weight);
+        if (sets.length === 0) continue;
+        await dbUpsert(ex.id, dateKey, sets);
+        // Refresh cache
+        cloudHistory[ex.id] = await dbFetchHistory(ex.id);
+        saved++;
+      }
+    }
+    unsaved = false;
+    const el = document.getElementById('saveStatus');
+    el.textContent = `✓ Saved ${new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}`;
+    el.style.color = '#2ab87a';
+    setSyncStatus('synced', `Saved ${saved} exercise${saved !== 1 ? 's' : ''} to cloud`);
+    renderDay();
+  } catch (e) {
+    setSyncStatus('error', 'Save failed — check connection');
+    document.getElementById('saveStatus').textContent = '✗ Save failed';
+    document.getElementById('saveStatus').style.color = '#e02a2a';
+    console.error(e);
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'SAVE WORKOUT';
+}
+
+async function clearToday() {
+  if (!confirm('Clear all logged data for today?')) return;
+  const day = SCHEDULE[activeDay];
+  const exIds = (day.groups || []).flatMap(g => g.exercises.map(e => e.id));
+  try {
+    setSyncStatus('syncing', 'Clearing...');
+    await dbDeleteDay(exIds, getTodayKey());
+    for (const id of exIds) cloudHistory[id] = await dbFetchHistory(id);
+    setSyncStatus('synced', 'Cleared');
+  } catch(e) { setSyncStatus('error', 'Clear failed'); }
+  initSession();
   unsaved = false;
-  const el = document.getElementById('saveStatus');
-  el.textContent = '✓ Saved ' + new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
-  el.style.color = '#2ab87a';
+  document.getElementById('saveStatus').textContent = 'Cleared';
+  document.getElementById('saveStatus').style.color = '#666';
   renderDay();
 }
 
-function clearToday() {
-  if (!confirm('Clear all data for today?')) return;
+// ── Navigation ───────────────────────────────────────────────────
+async function setActiveDay(day) {
+  if (unsaved && !confirm('Unsaved changes. Switch day anyway?')) return;
+  activeDay = day;
   initSession();
   unsaved = false;
-  const el = document.getElementById('saveStatus');
-  el.textContent = 'Cleared';
-  el.style.color = '#666';
+  document.getElementById('saveStatus').textContent = 'No unsaved changes';
+  document.getElementById('saveStatus').style.color = '#666';
+  renderNav();
+  renderDay();
+  await loadTodayFromCloud();
   renderDay();
 }
 
@@ -563,55 +569,47 @@ function showView(v) {
   currentView = v;
   document.getElementById('logView').style.display = v === 'log' ? '' : 'none';
   document.getElementById('progressView').style.display = v === 'progress' ? '' : 'none';
-  document.querySelectorAll('.view-tab').forEach((t, i) => {
-    t.classList.toggle('active', (i === 0 && v === 'log') || (i === 1 && v === 'progress'));
+  document.querySelectorAll('.view-tab').forEach((t,i) => {
+    t.classList.toggle('active', (i===0&&v==='log')||(i===1&&v==='progress'));
   });
   if (v === 'progress') renderProgress();
 }
 
-function setActiveDay(day) {
-  if (unsaved && !confirm('Unsaved changes. Switch day anyway?')) return;
-  activeDay = day;
-  initSession();
-  unsaved = false;
-  const el = document.getElementById('saveStatus');
-  el.textContent = 'No unsaved changes';
-  el.style.color = '#666';
-  renderNav();
-  renderDay();
-}
+// ── Render helpers ───────────────────────────────────────────────
+const DAY_COLORS = { Mon:'#e05c2a', Tue:'#2a7be0', Wed:'#2ab87a', Thu:'#e8a020', Fri:'#e02a6a', Sat:'#555', Sun:'#555' };
 
 function renderNav() {
-  const colors = { Mon:'#e05c2a', Tue:'#2a7be0', Wed:'#2ab87a', Thu:'#e8a020', Fri:'#e02a6a', Sat:'#555', Sun:'#555' };
   document.getElementById('dayNav').innerHTML = DAYS.map(d => {
-    const hasWorkout = (SCHEDULE[d].groups || []).length > 0;
-    const col = colors[d] || '#555';
-    return `<button class="day-btn ${d === activeDay ? 'active' : ''}"
-      style="${d === activeDay ? `border-color:${col};color:${col};background:${col}22` : ''}"
-      onclick="setActiveDay('${d}')">${d}${!hasWorkout ? ' 💤' : ''}</button>`;
+    const col = DAY_COLORS[d];
+    const hasWork = (SCHEDULE[d].groups||[]).length > 0;
+    const isActive = d === activeDay;
+    return `<button class="day-btn" style="${isActive ? `border-color:${col};color:${col};background:${col}22` : ''}"
+      onclick="setActiveDay('${d}')">${d}${!hasWork?' 💤':''}</button>`;
   }).join('');
+}
+
+function getHistory(exId) {
+  return cloudHistory[exId] || [];
 }
 
 function renderDay() {
   const container = document.getElementById('dayContent');
   const day = SCHEDULE[activeDay];
-  const colors = { Mon:'#e05c2a', Tue:'#2a7be0', Wed:'#2ab87a', Thu:'#e8a020', Fri:'#e02a6a', Sat:'#555', Sun:'#555' };
-  const accent = colors[activeDay];
+  const accent = DAY_COLORS[activeDay];
   document.documentElement.style.setProperty('--accent', accent);
 
   if (!day.groups || day.groups.length === 0) {
-    container.innerHTML = `
-      <div class="rest-day">
-        <div class="rest-icon">🛋️</div>
-        <div class="rest-text">Rest day. Eat your protein. Sleep well.</div>
-        <div class="rest-sub">Recovery is when you actually grow.</div>
-      </div>`;
+    container.innerHTML = `<div class="rest-day">
+      <div class="rest-icon">🛋️</div>
+      <div class="rest-text">Rest day. Eat your protein. Sleep well.</div>
+      <div class="rest-sub">Recovery is when you actually grow.</div>
+    </div>`;
     return;
   }
 
-  const totalEx = day.groups.reduce((a, g) => a + g.exercises.length, 0);
-  const completedEx = day.groups.reduce((a, g) =>
-    a + g.exercises.filter(ex => sessionData[ex.id] && sessionData[ex.id].sets.some(s => s.done)).length, 0);
+  const totalEx = day.groups.reduce((a,g) => a + g.exercises.length, 0);
+  const doneEx = day.groups.reduce((a,g) =>
+    a + g.exercises.filter(ex => sessionData[ex.id]?.sets.some(s=>s.done)).length, 0);
 
   let html = `
     <div class="day-header">
@@ -619,9 +617,9 @@ function renderDay() {
         <div class="day-title">${day.label}</div>
         <div class="day-focus">${day.focus}</div>
       </div>
-      <div class="ex-count">${completedEx}/${totalEx} done</div>
+      <div class="ex-count">${doneEx}/${totalEx} done</div>
     </div>
-    <div class="tip-bar">🔥 2 sets to failure on every main exercise. Log reps + lbs, check ✓ each set when done.</div>
+    <div class="tip-bar">🔥 2 sets to failure on every main exercise. Log reps + lbs, tap ✓ each set when done. Hit SAVE when finished.</div>
   `;
 
   day.groups.forEach(group => {
@@ -641,17 +639,16 @@ function renderDay() {
 
     group.exercises.forEach(ex => {
       const sd = sessionData[ex.id];
-      const history = loadHistory(ex.id);
-      const isCompleted = sd && sd.sets.some(s => s.done);
-      const isFinisher = group.finisher;
+      const history = getHistory(ex.id);
+      const isCompleted = sd?.sets.some(s => s.done);
 
-      html += `<div class="exercise-card ${isCompleted ? 'completed' : ''} ${isFinisher ? 'finisher-card' : ''}" id="card_${ex.id}">
+      html += `<div class="exercise-card ${isCompleted?'completed':''} ${group.finisher?'finisher-card':''}">
         <div class="ex-header">
           <div>
             <div class="ex-name">${ex.name}</div>
             <div class="ex-notes">${ex.notes}</div>
           </div>
-          <div class="ex-target ${isFinisher ? 'finisher-target' : ''}">${ex.target}<small>TARGET</small></div>
+          <div class="ex-target ${group.finisher?'finisher-target':''}">${ex.target}<small>TARGET</small></div>
         </div>
         <div class="sets-area">
           <div class="sets-grid-header">
@@ -661,19 +658,15 @@ function renderDay() {
             <div class="col-label">✓</div>
           </div>`;
 
-      (sd ? sd.sets : []).forEach((set, si) => {
+      (sd?.sets || []).forEach((set, si) => {
         html += `<div class="sets-grid">
-          <div class="set-num">${si + 1}</div>
-          <input class="set-input" type="number" min="0" placeholder="—"
-            value="${set.reps}"
-            onchange="updateSet('${ex.id}',${si},'reps',this.value)"
-            oninput="markUnsaved()">
-          <input class="set-input" type="number" min="0" step="2.5" placeholder="—"
-            value="${set.weight}"
-            onchange="updateSet('${ex.id}',${si},'weight',this.value)"
-            oninput="markUnsaved()">
-          <button class="check-btn ${set.done ? 'done' : ''}" onclick="toggleDone('${ex.id}',${si})">
-            ${set.done ? '✓' : '○'}
+          <div class="set-num">${si+1}</div>
+          <input class="set-input" type="number" min="0" placeholder="—" value="${set.reps}"
+            onchange="updateSet('${ex.id}',${si},'reps',this.value)" oninput="markUnsaved()">
+          <input class="set-input" type="number" min="0" step="2.5" placeholder="—" value="${set.weight}"
+            onchange="updateSet('${ex.id}',${si},'weight',this.value)" oninput="markUnsaved()">
+          <button class="check-btn ${set.done?'done':''}" onclick="toggleDone('${ex.id}',${si})">
+            ${set.done?'✓':'○'}
           </button>
         </div>`;
       });
@@ -681,20 +674,20 @@ function renderDay() {
       html += `<button class="add-set-btn" onclick="addSet('${ex.id}')">+ Add Set</button>
         </div>
         <button class="history-toggle" onclick="toggleHistory('${ex.id}')">
-          ${sd && sd.historyOpen ? '▲' : '▼'} HISTORY (${history.length} sessions)
+          ${sd?.historyOpen?'▲':'▼'} HISTORY (${history.length} sessions)
         </button>
-        <div class="history-panel ${sd && sd.historyOpen ? 'open' : ''}" id="hist_${ex.id}">`;
+        <div class="history-panel ${sd?.historyOpen?'open':''}">`;
 
       if (history.length === 0) {
         html += `<div class="no-history">No sessions logged yet</div>`;
       } else {
-        history.slice(0, 5).forEach(entry => {
+        history.slice(0,5).forEach(entry => {
           const setsStr = entry.sets.map(s =>
-            `${s.reps || '?'}r${s.weight ? ' @' + s.weight + 'lb' : ''}`
+            `${s.reps||'?'}r${s.weight?' @'+s.weight+'lb':''}`
           ).join(' · ');
           html += `<div class="history-entry">
             <div>
-              <div class="h-date">${entry.date}</div>
+              <div class="h-date">${entry.log_date}</div>
               <div class="h-sets">${setsStr}</div>
             </div>
           </div>`;
@@ -710,19 +703,19 @@ function renderDay() {
   container.innerHTML = html;
 }
 
-function updateSet(exId, setIdx, field, value) {
-  if (sessionData[exId]) sessionData[exId].sets[setIdx][field] = value;
+function updateSet(exId, si, field, value) {
+  if (sessionData[exId]) sessionData[exId].sets[si][field] = value;
   markUnsaved();
 }
 
-function toggleDone(exId, setIdx) {
-  if (sessionData[exId]) sessionData[exId].sets[setIdx].done = !sessionData[exId].sets[setIdx].done;
+function toggleDone(exId, si) {
+  if (sessionData[exId]) sessionData[exId].sets[si].done = !sessionData[exId].sets[si].done;
   markUnsaved();
   renderDay();
 }
 
 function addSet(exId) {
-  if (sessionData[exId]) sessionData[exId].sets.push({ reps: '', weight: '', done: false });
+  if (sessionData[exId]) sessionData[exId].sets.push({ reps:'', weight:'', done:false });
   markUnsaved();
   renderDay();
 }
@@ -732,80 +725,81 @@ function toggleHistory(exId) {
   renderDay();
 }
 
-function renderProgress() {
+// ── Progress view ────────────────────────────────────────────────
+async function renderProgress() {
   const container = document.getElementById('progressContent');
-  const muscleGroups = {
-    'CHEST': ['dips_mon','db_chest_press_mon','db_flyes_tue','across_body_tue','dips_wed','db_flyes_wed','db_chest_press_thu','across_body_thu','dips_fri','db_flyes_fri'],
-    'BACK': ['pullups_mon','inv_rows_mon','pullups_tue','inv_rows_tue','pullups_wed','inv_rows_wed','pullups_thu','inv_rows_thu','pullups_fri','inv_rows_fri'],
-    'BICEPS': ['hammer_mon','db_curls_mon','twist_curl_tue','rev_curl_tue','hammer_wed','twist_curl_wed','db_curls_thu','rev_curl_thu','hammer_fri','twist_curl_fri'],
-    'TRICEPS': ['tri_ext_mon','single_tri_mon','dips_tue','tri_ext_tue','single_tri_wed','tri_ext_wed','dips_thu','single_tri_thu','tri_ext_fri','single_tri_fri'],
-  };
+  container.innerHTML = `<div class="empty-state">Loading progress data...</div>`;
 
-  // Build name lookup
-  const nameLookup = {};
-  Object.values(SCHEDULE).forEach(day => {
-    (day.groups || []).forEach(g => g.exercises.forEach(ex => { nameLookup[ex.id] = ex.name; }));
-  });
+  try {
+    setSyncStatus('syncing', 'Loading progress...');
+    const allRows = await dbFetchAll();
+    setSyncStatus('synced', 'Synced');
 
-  // Aggregate by exercise name across all IDs
-  const aggregated = {};
-  Object.entries(muscleGroups).forEach(([muscle, ids]) => {
-    if (!aggregated[muscle]) aggregated[muscle] = {};
-    ids.forEach(id => {
-      const name = nameLookup[id];
-      if (!name) return;
-      const history = loadHistory(id);
-      if (!aggregated[muscle][name]) aggregated[muscle][name] = { sessions: 0, bestWeight: 0, latest: null };
-      const agg = aggregated[muscle][name];
-      agg.sessions += history.length;
-      history.forEach(h => {
-        h.sets.forEach(s => {
-          const w = parseFloat(s.weight) || 0;
-          if (w > agg.bestWeight) agg.bestWeight = w;
+    const muscleGroups = {
+      CHEST: ['dips_mon','db_chest_press_mon','db_flyes_tue','across_body_tue','dips_wed','db_flyes_wed','db_chest_press_thu','across_body_thu','dips_fri','db_flyes_fri'],
+      BACK: ['pullups_mon','inv_rows_mon','pullups_tue','inv_rows_tue','pullups_wed','inv_rows_wed','pullups_thu','inv_rows_thu','pullups_fri','inv_rows_fri'],
+      BICEPS: ['hammer_mon','db_curls_mon','twist_curl_tue','rev_curl_tue','hammer_wed','twist_curl_wed','db_curls_thu','rev_curl_thu','hammer_fri','twist_curl_fri'],
+      TRICEPS: ['tri_ext_mon','single_tri_mon','dips_tue','tri_ext_tue','single_tri_wed','tri_ext_wed','dips_thu','single_tri_thu','tri_ext_fri','single_tri_fri'],
+    };
+
+    const nameLookup = {};
+    Object.values(SCHEDULE).forEach(day => {
+      (day.groups||[]).forEach(g => g.exercises.forEach(ex => { nameLookup[ex.id] = ex.name; }));
+    });
+
+    const agg = {};
+    Object.entries(muscleGroups).forEach(([muscle, ids]) => {
+      agg[muscle] = {};
+      ids.forEach(id => {
+        const name = nameLookup[id]; if (!name) return;
+        if (!agg[muscle][name]) agg[muscle][name] = { sessions:0, bestWeight:0, latest:null };
+        const rows = allRows.filter(r => r.exercise_id === id);
+        agg[muscle][name].sessions += rows.length;
+        rows.forEach(r => {
+          r.sets.forEach(s => {
+            const w = parseFloat(s.weight)||0;
+            if (w > agg[muscle][name].bestWeight) agg[muscle][name].bestWeight = w;
+          });
+          if (!agg[muscle][name].latest || r.log_date > agg[muscle][name].latest.log_date)
+            agg[muscle][name].latest = r;
         });
-        if (!agg.latest || h.date > agg.latest.date) agg.latest = h;
       });
     });
-  });
 
-  const colors = { CHEST: '#e05c2a', BACK: '#2a7be0', BICEPS: '#2ab87a', TRICEPS: '#e8a020' };
-  let html = '';
-  let anyData = false;
+    const colors = { CHEST:'#e05c2a', BACK:'#2a7be0', BICEPS:'#2ab87a', TRICEPS:'#e8a020' };
+    let html = ''; let anyData = false;
 
-  Object.entries(aggregated).forEach(([muscle, exercises]) => {
-    const hasData = Object.values(exercises).some(e => e.sessions > 0);
-    if (!hasData) return;
-    anyData = true;
-    html += `<div class="progress-section">
-      <div class="progress-section-title" style="color:${colors[muscle]||'#888'}">${muscle}</div>`;
-
-    Object.entries(exercises).forEach(([name, data]) => {
-      if (data.sessions === 0) return;
-      const latestStr = data.latest
-        ? data.latest.sets.map(s => `${s.reps||'?'}r${s.weight?'@'+s.weight+'lb':''}`).join(' · ')
-        : '—';
-      html += `<div class="progress-row">
-        <div>
-          <div class="p-exname">${name}</div>
-          <div class="p-sessions">${data.sessions} session${data.sessions !== 1 ? 's' : ''}</div>
-          <div class="p-sessions" style="margin-top:2px;color:#555">Last: ${latestStr}</div>
-        </div>
-        <div class="p-best">
-          ${data.bestWeight > 0 ? data.bestWeight + ' lb' : 'BW'}
-          <small>BEST WEIGHT</small>
-        </div>
-      </div>`;
+    Object.entries(agg).forEach(([muscle, exercises]) => {
+      const hasData = Object.values(exercises).some(e => e.sessions > 0);
+      if (!hasData) return;
+      anyData = true;
+      html += `<div class="progress-section">
+        <div class="progress-section-title" style="color:${colors[muscle]}">${muscle}</div>`;
+      Object.entries(exercises).forEach(([name, data]) => {
+        if (data.sessions === 0) return;
+        const latestStr = data.latest
+          ? data.latest.sets.map(s=>`${s.reps||'?'}r${s.weight?' @'+s.weight+'lb':''}`).join(' · ')
+          : '—';
+        html += `<div class="progress-row">
+          <div>
+            <div class="p-exname">${name}</div>
+            <div class="p-sessions">${data.sessions} session${data.sessions!==1?'s':''}</div>
+            <div class="p-sessions" style="margin-top:2px;color:#555">Last: ${latestStr}</div>
+          </div>
+          <div class="p-best">${data.bestWeight>0?data.bestWeight+' lb':'BW'}<small>BEST WEIGHT</small></div>
+        </div>`;
+      });
+      html += `</div>`;
     });
-    html += `</div>`;
-  });
 
-  if (!anyData) {
-    html = `<div class="empty-state">No workouts logged yet.<br><br>Head to Log Workout and start tracking.</div>`;
+    container.innerHTML = anyData ? html : `<div class="empty-state">No workouts logged yet.<br><br>Head to Log Workout and start tracking.</div>`;
+  } catch(e) {
+    container.innerHTML = `<div class="empty-state">Could not load progress. Check your connection.</div>`;
+    setSyncStatus('error', 'Failed to load progress');
   }
-
-  container.innerHTML = html;
 }
 
+// ── Date display ─────────────────────────────────────────────────
 function initDate() {
   const now = new Date();
   const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
@@ -814,10 +808,17 @@ function initDate() {
   document.getElementById('todayDay').textContent = days[now.getDay()];
 }
 
-initDate();
-initSession();
-renderNav();
-renderDay();
+// ── Boot ─────────────────────────────────────────────────────────
+async function boot() {
+  initDate();
+  initSession();
+  renderNav();
+  renderDay();
+  await loadTodayFromCloud();
+  renderDay();
+}
+
+boot();
 </script>
 </body>
 </html>
