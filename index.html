@@ -193,6 +193,85 @@
   .p-best small { display: block; font-size: 9px; color: var(--muted); }
   .empty-state { text-align: center; padding: 40px 20px; color: var(--dim); font-size: 13px; }
 
+  /* ── Manage / Edit styles ── */
+  .manage-section { margin-bottom: 28px; }
+  .manage-day-select {
+    display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 20px;
+  }
+  .manage-day-btn {
+    padding: 7px 14px; border-radius: 6px; border: 2px solid var(--border);
+    background: var(--surface); color: var(--muted); font-family: 'DM Mono', monospace;
+    font-size: 12px; cursor: pointer; transition: all 0.15s;
+  }
+  .manage-day-btn.active { border-color: #e8a020; color: #e8a020; background: #e8a02018; }
+
+  .manage-group { background: var(--surface); border-radius: 10px; margin-bottom: 16px; overflow: hidden; }
+  .manage-group-header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 16px; border-bottom: 1px solid var(--border);
+    background: var(--surface2);
+  }
+  .manage-group-name { font-family: 'Bebas Neue', sans-serif; font-size: 15px; letter-spacing: 2px; color: var(--muted); }
+
+  .manage-ex-row {
+    display: grid; grid-template-columns: 1fr auto;
+    gap: 8px; padding: 10px 16px; border-bottom: 1px solid var(--border);
+    align-items: start;
+  }
+  .manage-ex-row:last-child { border-bottom: none; }
+
+  .manage-input {
+    background: var(--surface2); border: 1px solid var(--border); border-radius: 6px;
+    color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 13px;
+    padding: 7px 10px; width: 100%; transition: border-color 0.15s; margin-bottom: 5px;
+  }
+  .manage-input:focus { outline: none; border-color: #e8a020; background: var(--surface3); }
+  .manage-input::placeholder { color: var(--dim); }
+  .manage-input-label { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 2px; color: var(--dim); text-transform: uppercase; margin-bottom: 3px; }
+
+  .manage-ex-actions { display: flex; flex-direction: column; gap: 5px; padding-top: 2px; }
+  .icon-btn {
+    width: 30px; height: 30px; border-radius: 6px; border: 1px solid var(--border);
+    background: var(--surface2); color: var(--muted); cursor: pointer; font-size: 14px;
+    display: flex; align-items: center; justify-content: center; transition: all 0.15s;
+  }
+  .icon-btn.delete:hover { border-color: #e02a2a; color: #e02a2a; background: #e02a2a18; }
+  .icon-btn.save-ex:hover { border-color: #2ab87a; color: #2ab87a; background: #2ab87a18; }
+
+  .add-ex-form {
+    padding: 14px 16px; border-top: 1px dashed var(--border);
+    background: var(--bg);
+  }
+  .add-ex-form-title { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; margin-bottom: 10px; }
+  .add-ex-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+  .add-ex-btn {
+    width: 100%; padding: 9px; border-radius: 6px; border: 1px solid #e8a020;
+    background: #e8a02018; color: #e8a020; font-family: 'DM Mono', monospace;
+    font-size: 11px; cursor: pointer; transition: all 0.15s; letter-spacing: 1px;
+  }
+  .add-ex-btn:hover { background: #e8a02030; }
+
+  .manage-save-bar {
+    background: var(--surface2); border-radius: 8px; padding: 12px 16px;
+    margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;
+  }
+  .manage-save-note { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); }
+  .manage-save-all-btn {
+    padding: 9px 20px; border-radius: 8px; border: none; background: #e8a020;
+    color: #000; font-family: 'Bebas Neue', sans-serif; font-size: 15px;
+    letter-spacing: 1px; cursor: pointer; transition: opacity 0.15s;
+  }
+  .manage-save-all-btn:hover { opacity: 0.85; }
+
+  .toast {
+    position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
+    background: #2ab87a; color: #000; font-family: 'DM Mono', monospace;
+    font-size: 12px; padding: 10px 20px; border-radius: 8px;
+    opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 200;
+    white-space: nowrap;
+  }
+  .toast.show { opacity: 1; }
+
   @media (max-width: 480px) {
     .program-title { font-size: 28px; }
     .header { flex-direction: column; gap: 10px; align-items: flex-start; }
@@ -222,6 +301,7 @@
   <div class="view-tabs">
     <button class="view-tab active" onclick="showView('log')">LOG WORKOUT</button>
     <button class="view-tab" onclick="showView('progress')">PROGRESS</button>
+    <button class="view-tab" onclick="showView('manage')">MANAGE</button>
   </div>
 
   <div id="logView">
@@ -232,6 +312,12 @@
   <div id="progressView" style="display:none;">
     <div id="progressContent"></div>
   </div>
+
+  <div id="manageView" style="display:none;">
+    <div id="manageContent"></div>
+  </div>
+
+  <div class="toast" id="toast"></div>
 
 </div>
 
@@ -569,10 +655,12 @@ function showView(v) {
   currentView = v;
   document.getElementById('logView').style.display = v === 'log' ? '' : 'none';
   document.getElementById('progressView').style.display = v === 'progress' ? '' : 'none';
+  document.getElementById('manageView').style.display = v === 'manage' ? '' : 'none';
   document.querySelectorAll('.view-tab').forEach((t,i) => {
-    t.classList.toggle('active', (i===0&&v==='log')||(i===1&&v==='progress'));
+    t.classList.toggle('active', (i===0&&v==='log')||(i===1&&v==='progress')||(i===2&&v==='manage'));
   });
   if (v === 'progress') renderProgress();
+  if (v === 'manage') renderManage();
 }
 
 // ── Render helpers ───────────────────────────────────────────────
@@ -799,6 +887,202 @@ async function renderProgress() {
   }
 }
 
+// ── Toast helper ─────────────────────────────────────────────────
+function showToast(msg, color) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.background = color || '#2ab87a';
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ── Manage / Edit view ───────────────────────────────────────────
+let manageDay = 'Mon';
+
+// Custom schedule overrides stored in localStorage
+const CUSTOM_KEY = 'custom_schedule_v1';
+
+function loadCustomSchedule() {
+  try {
+    const saved = localStorage.getItem(CUSTOM_KEY);
+    if (!saved) return;
+    const custom = JSON.parse(saved);
+    // Merge custom names/notes/targets into SCHEDULE
+    Object.entries(custom).forEach(([dayKey, groups]) => {
+      if (!SCHEDULE[dayKey]) return;
+      groups.forEach((cg, gi) => {
+        const sg = SCHEDULE[dayKey].groups[gi];
+        if (!sg) return;
+        cg.exercises.forEach((ce, ei) => {
+          if (!sg.exercises[ei]) {
+            // New exercise added
+            sg.exercises.push(ce);
+          } else {
+            sg.exercises[ei].name = ce.name;
+            sg.exercises[ei].notes = ce.notes;
+            sg.exercises[ei].target = ce.target;
+          }
+        });
+        // Handle deletions: if custom has fewer exercises, trim
+        sg.exercises.length = cg.exercises.length;
+      });
+    });
+  } catch(e) { console.error('Failed to load custom schedule', e); }
+}
+
+function saveCustomSchedule() {
+  const custom = {};
+  Object.entries(SCHEDULE).forEach(([dayKey, day]) => {
+    custom[dayKey] = (day.groups || []).map(g => ({
+      exercises: g.exercises.map(ex => ({
+        id: ex.id, name: ex.name, notes: ex.notes, target: ex.target
+      }))
+    }));
+  });
+  localStorage.setItem(CUSTOM_KEY, JSON.stringify(custom));
+}
+
+function renderManage() {
+  const container = document.getElementById('manageContent');
+  const workDays = DAYS.filter(d => (SCHEDULE[d].groups||[]).length > 0);
+
+  let html = `
+    <div class="manage-save-bar">
+      <div class="manage-save-note">Changes apply immediately and persist across devices via local storage.</div>
+      <button class="manage-save-all-btn" onclick="applyAndSaveAll()">SAVE ALL CHANGES</button>
+    </div>
+    <div class="manage-day-select">
+      ${workDays.map(d => `
+        <button class="manage-day-btn ${d === manageDay ? 'active' : ''}" onclick="setManageDay('${d}')">
+          ${SCHEDULE[d].label}
+        </button>`).join('')}
+    </div>
+    <div id="manageDayGroups"></div>
+  `;
+  container.innerHTML = html;
+  renderManageDayGroups();
+}
+
+function setManageDay(day) {
+  manageDay = day;
+  renderManage();
+}
+
+function renderManageDayGroups() {
+  const container = document.getElementById('manageDayGroups');
+  if (!container) return;
+  const day = SCHEDULE[manageDay];
+  let html = '';
+
+  (day.groups || []).forEach((group, gi) => {
+    html += `<div class="manage-group">
+      <div class="manage-group-header">
+        <div class="manage-group-name">${group.name}</div>
+      </div>`;
+
+    group.exercises.forEach((ex, ei) => {
+      html += `<div class="manage-ex-row">
+        <div style="flex:1">
+          <div class="manage-input-label">Exercise Name</div>
+          <input class="manage-input" id="name_${manageDay}_${gi}_${ei}"
+            value="${ex.name}" placeholder="Exercise name">
+          <div class="manage-input-label" style="margin-top:6px">Notes / Cue</div>
+          <input class="manage-input" id="notes_${manageDay}_${gi}_${ei}"
+            value="${ex.notes}" placeholder="Coaching note">
+          <div class="manage-input-label" style="margin-top:6px">Target</div>
+          <input class="manage-input" id="target_${manageDay}_${gi}_${ei}"
+            value="${ex.target}" placeholder="e.g. 2 × Failure">
+        </div>
+        <div class="manage-ex-actions">
+          <button class="icon-btn save-ex" title="Save this exercise"
+            onclick="saveOneExercise('${manageDay}',${gi},${ei})">✓</button>
+          <button class="icon-btn delete" title="Remove exercise"
+            onclick="removeExercise('${manageDay}',${gi},${ei})">✕</button>
+        </div>
+      </div>`;
+    });
+
+    // Add new exercise form
+    html += `<div class="add-ex-form">
+      <div class="add-ex-form-title">+ Add Exercise to ${group.name}</div>
+      <div class="manage-input-label">Exercise Name</div>
+      <input class="manage-input" id="new_name_${manageDay}_${gi}" placeholder="e.g. Cable Curl">
+      <div class="add-ex-row">
+        <div>
+          <div class="manage-input-label">Notes / Cue</div>
+          <input class="manage-input" id="new_notes_${manageDay}_${gi}" placeholder="e.g. Slow negative">
+        </div>
+        <div>
+          <div class="manage-input-label">Target</div>
+          <input class="manage-input" id="new_target_${manageDay}_${gi}" placeholder="2 × Failure">
+        </div>
+      </div>
+      <button class="add-ex-btn" onclick="addExercise('${manageDay}',${gi})">+ ADD EXERCISE</button>
+    </div>
+    </div>`;
+  });
+
+  container.innerHTML = html;
+}
+
+function saveOneExercise(dayKey, gi, ei) {
+  const name = document.getElementById(`name_${dayKey}_${gi}_${ei}`)?.value.trim();
+  const notes = document.getElementById(`notes_${dayKey}_${gi}_${ei}`)?.value.trim();
+  const target = document.getElementById(`target_${dayKey}_${gi}_${ei}`)?.value.trim();
+  if (!name) { showToast('Name cannot be empty', '#e02a2a'); return; }
+  SCHEDULE[dayKey].groups[gi].exercises[ei].name = name;
+  SCHEDULE[dayKey].groups[gi].exercises[ei].notes = notes || '';
+  SCHEDULE[dayKey].groups[gi].exercises[ei].target = target || '2 × Failure';
+  saveCustomSchedule();
+  showToast('Exercise updated ✓');
+  renderManageDayGroups();
+}
+
+function removeExercise(dayKey, gi, ei) {
+  const ex = SCHEDULE[dayKey].groups[gi].exercises[ei];
+  if (!confirm(`Remove "${ex.name}" from ${SCHEDULE[dayKey].groups[gi].name}?`)) return;
+  SCHEDULE[dayKey].groups[gi].exercises.splice(ei, 1);
+  saveCustomSchedule();
+  // Re-init session so removed exercise doesn't linger
+  initSession();
+  showToast('Exercise removed', '#e8a020');
+  renderManageDayGroups();
+}
+
+function addExercise(dayKey, gi) {
+  const name = document.getElementById(`new_name_${dayKey}_${gi}`)?.value.trim();
+  const notes = document.getElementById(`new_notes_${dayKey}_${gi}`)?.value.trim();
+  const target = document.getElementById(`new_target_${dayKey}_${gi}`)?.value.trim() || '2 × Failure';
+  if (!name) { showToast('Enter an exercise name first', '#e02a2a'); return; }
+
+  // Generate a unique id
+  const id = `custom_${dayKey.toLowerCase()}_${gi}_${Date.now()}`;
+  SCHEDULE[dayKey].groups[gi].exercises.push({ id, name, notes: notes || '', target });
+  saveCustomSchedule();
+  initSession();
+  showToast(`"${name}" added ✓`);
+  renderManageDayGroups();
+}
+
+function applyAndSaveAll() {
+  // Save all currently visible inputs at once
+  const day = SCHEDULE[manageDay];
+  (day.groups || []).forEach((group, gi) => {
+    group.exercises.forEach((ex, ei) => {
+      const nameEl = document.getElementById(`name_${manageDay}_${gi}_${ei}`);
+      const notesEl = document.getElementById(`notes_${manageDay}_${gi}_${ei}`);
+      const targetEl = document.getElementById(`target_${manageDay}_${gi}_${ei}`);
+      if (nameEl && nameEl.value.trim()) ex.name = nameEl.value.trim();
+      if (notesEl) ex.notes = notesEl.value.trim();
+      if (targetEl && targetEl.value.trim()) ex.target = targetEl.value.trim();
+    });
+  });
+  saveCustomSchedule();
+  initSession();
+  showToast('All changes saved ✓');
+  renderManageDayGroups();
+}
+
 // ── Date display ─────────────────────────────────────────────────
 function initDate() {
   const now = new Date();
@@ -810,6 +1094,7 @@ function initDate() {
 
 // ── Boot ─────────────────────────────────────────────────────────
 async function boot() {
+  loadCustomSchedule();
   initDate();
   initSession();
   renderNav();
